@@ -3,7 +3,12 @@ extends Node
 ## Loaded manually from CSV instead of Godot's TranslationServer pipeline so
 ## the game works correctly when built headlessly (no editor import step).
 
-const STRINGS_PATH := "res://localization/strings_he.csv"
+## Deliberately not ".csv" - Godot auto-imports .csv as a Translation
+## resource and does not ship the raw source file in exports, so
+## FileAccess.open() on a ".csv" path returns null in an exported build
+## (this is exactly what produced the "?KEY?" fallback text on screen).
+## A generic extension is copied into the PCK as-is instead.
+const STRINGS_PATH := "res://localization/strings_he.dat"
 
 var _strings: Dictionary = {}
 

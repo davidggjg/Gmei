@@ -1,8 +1,8 @@
 extends CanvasLayer
 class_name TouchControls
 
-@onready var move_joystick: VirtualJoystick = $MoveJoystick
-@onready var look_pad: LookPad = $LookPad
+@onready var move_joystick: VirtualJoystick = $Root/MoveJoystick
+@onready var look_pad: LookPad = $Root/LookPad
 
 func _ready() -> void:
 	visible = SettingsManager.show_touch_controls

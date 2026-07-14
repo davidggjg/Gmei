@@ -18,7 +18,12 @@ var player: Player
 var _hit_marker_tween: Tween
 
 func _ready() -> void:
-	Loc.apply_rtl($Root)
+	# Deliberately NOT Loc.apply_rtl here: the gameplay HUD's element
+	# positions (health bottom-left, ammo bottom-right, radar top-right)
+	# are a physical/ergonomic convention independent of text language,
+	# not a reading-direction thing - RTL-mirroring the whole Root also
+	# mirrors those fixed positions, which is a bug, not localization.
+	$Root.layout_direction = Control.LAYOUT_DIRECTION_LTR
 	interact_prompt.visible = false
 	death_screen.visible = false
 	hit_marker.visible = false
