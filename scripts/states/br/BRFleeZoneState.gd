@@ -14,7 +14,7 @@ func physics_update(delta: float) -> void:
 	if flat.length() <= bot.safe_zone.current_radius - 4.0:
 		state_machine.transition_to("Roam")
 		return
-	var inward := -flat.normalized() if flat.length() > 0.01 else Vector2.ZERO
+	var inward: Vector2 = -flat.normalized() if flat.length() > 0.01 else Vector2.ZERO
 	var goal_flat := inward * maxf(bot.safe_zone.current_radius - 8.0, 0.0)
 	var goal := Vector3(goal_flat.x, bot.global_position.y, goal_flat.y)
 	bot.move_toward_point(goal, bot.move_speed, delta)

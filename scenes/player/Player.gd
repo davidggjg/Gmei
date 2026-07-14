@@ -52,7 +52,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		return
 	if event is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 		var s := SettingsManager.mouse_sensitivity * 0.01
-		var dy := event.relative.y * s * (-1.0 if SettingsManager.invert_y else 1.0)
+		var dy: float = event.relative.y * s * (-1.0 if SettingsManager.invert_y else 1.0)
 		camera_rig.apply_look_delta(event.relative.x * s, dy)
 	if event.is_action_pressed("toggle_camera_view"):
 		camera_rig.toggle_mode()
@@ -72,7 +72,7 @@ func _on_touch_look_delta(delta: Vector2) -> void:
 	if is_dead or GameManager.is_paused:
 		return
 	var s := SettingsManager.touch_sensitivity * 0.01
-	var dy := delta.y * s * (-1.0 if SettingsManager.invert_y else 1.0)
+	var dy: float = delta.y * s * (-1.0 if SettingsManager.invert_y else 1.0)
 	camera_rig.apply_look_delta(delta.x * s, dy)
 
 func _physics_process(delta: float) -> void:
