@@ -30,5 +30,12 @@ func _on_area_entered(area: Area3D) -> void:
 		return
 	if area in _already_hit:
 		return
+	# Never hit the wielder's own Hurtbox. This matters most in third-person,
+	# where the camera (and the melee hitbox attached to it) can end up
+	# close to or inside the player's own body - e.g. when the SpringArm3D
+	# shortens against a nearby wall - which was landing the starting
+	# Knife's swing on the player themselves.
+	if owner_actor != null and area.get_parent() == owner_actor:
+		return
 	_already_hit.append(area)
 	area.receive_hit(damage, owner_actor)
