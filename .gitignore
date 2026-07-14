@@ -1,0 +1,28 @@
+# Godot 4 generated/local files
+.godot/
+.import/
+export.cfg
+export_credentials.cfg
+*.translation
+
+# Godot mono
+.mono/
+data_*/
+
+# Builds
+build/
+*.apk
+*.aab
+*.apks
+
+# Android keystores (never commit real signing keys)
+android/keystore/*.jks
+android/keystore/*.keystore
+!android/keystore/.gitkeep
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+.vscode/
+.idea/

@@ -1,0 +1,40 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://scripts/core/Door.gd" id="1"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_prompt"]
+size = Vector3(3.0, 3.2, 2.6)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_slab"]
+size = Vector3(0.15, 3.2, 2.4)
+
+[sub_resource type="BoxMesh" id="BoxMesh_slab"]
+size = Vector3(0.15, 3.2, 2.4)
+
+[sub_resource type="StandardMaterial3D" id="Mat_Door"]
+albedo_color = Color(0.28, 0.18, 0.1, 1)
+roughness = 0.8
+
+[node name="Door" type="Area3D"]
+script = ExtResource("1")
+locked = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 0)
+shape = SubResource("BoxShape3D_prompt")
+
+[node name="Pivot" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.2)
+
+[node name="DoorBody" type="StaticBody3D" parent="Pivot"]
+collision_layer = 1
+collision_mask = 0
+
+[node name="Mesh" type="MeshInstance3D" parent="Pivot/DoorBody"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 1.2)
+mesh = SubResource("BoxMesh_slab")
+surface_material_override/0 = SubResource("Mat_Door")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Pivot/DoorBody"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 1.2)
+shape = SubResource("BoxShape3D_slab")

@@ -1,0 +1,9 @@
+[gd_resource type="SystemFont" format=3]
+
+[resource]
+font_names = PackedStringArray("Noto Sans Hebrew", "Arial Hebrew", "Roboto", "Segoe UI", "Arial", "sans-serif")
+font_italic = false
+antialiasing = 1
+hinting = 1
+subpixel_positioning = 1
+oversampling = 0.0

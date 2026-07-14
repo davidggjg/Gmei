@@ -1,0 +1,36 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/enemies/EnemyBase.tscn" id="1"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_crawler_body"]
+radius = 0.3
+height = 1.05
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_crawler_hurt"]
+radius = 0.32
+height = 1.1
+
+[node name="Crawler" instance=ExtResource("1")]
+display_name_key = "ENEMY_CRAWLER_NAME"
+base_max_health = 35.0
+base_patrol_speed = 2.2
+base_chase_speed = 5.2
+base_attack_damage = 8.0
+attack_range = 1.3
+attack_cooldown = 0.8
+base_detection_radius = 9.0
+vision_fov_deg = 130.0
+
+[node name="EnemyBodyVisual" parent="." index="1"]
+scale = Vector3(0.75, 0.55, 0.75)
+
+[node name="CollisionShape3D" parent="." index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.55, 0)
+shape = SubResource("CapsuleShape3D_crawler_body")
+
+[node name="CollisionShape3D" parent="Hurtbox" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.55, 0)
+shape = SubResource("CapsuleShape3D_crawler_hurt")
+
+[node name="Eyes" parent="." index="2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)

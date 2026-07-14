@@ -1,0 +1,57 @@
+[gd_scene load_steps=7 format=3]
+
+[sub_resource type="StandardMaterial3D" id="Mat_Suit"]
+albedo_color = Color(0.16, 0.18, 0.17, 1)
+roughness = 0.85
+
+[sub_resource type="StandardMaterial3D" id="Mat_Skin"]
+albedo_color = Color(0.75, 0.6, 0.5, 1)
+roughness = 0.7
+
+[sub_resource type="CapsuleMesh" id="Mesh_Torso"]
+radius = 0.24
+height = 0.75
+
+[sub_resource type="SphereMesh" id="Mesh_Head"]
+radius = 0.15
+height = 0.3
+
+[sub_resource type="CapsuleMesh" id="Mesh_Limb"]
+radius = 0.075
+height = 0.6
+
+[sub_resource type="CapsuleMesh" id="Mesh_Leg"]
+radius = 0.09
+height = 0.75
+
+[node name="PlayerBodyVisual" type="Node3D"]
+
+[node name="Torso" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.12, 0)
+mesh = SubResource("Mesh_Torso")
+surface_material_override/0 = SubResource("Mat_Suit")
+
+[node name="Head" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.62, 0)
+mesh = SubResource("Mesh_Head")
+surface_material_override/0 = SubResource("Mat_Skin")
+
+[node name="ArmL" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.32, 1.18, 0)
+mesh = SubResource("Mesh_Limb")
+surface_material_override/0 = SubResource("Mat_Suit")
+
+[node name="ArmR" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.32, 1.18, 0)
+mesh = SubResource("Mesh_Limb")
+surface_material_override/0 = SubResource("Mat_Suit")
+
+[node name="LegL" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.14, 0.4, 0)
+mesh = SubResource("Mesh_Leg")
+surface_material_override/0 = SubResource("Mat_Suit")
+
+[node name="LegR" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.14, 0.4, 0)
+mesh = SubResource("Mesh_Leg")
+surface_material_override/0 = SubResource("Mat_Suit")

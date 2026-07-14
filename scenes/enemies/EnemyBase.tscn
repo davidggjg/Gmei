@@ -1,0 +1,86 @@
+[gd_scene load_steps=15 format=3]
+
+[ext_resource type="Script" path="res://scenes/enemies/EnemyBase.gd" id="1"]
+[ext_resource type="PackedScene" path="res://scenes/enemies/EnemyBodyVisual.tscn" id="2"]
+[ext_resource type="Script" path="res://scripts/core/Health.gd" id="3"]
+[ext_resource type="Script" path="res://scripts/core/Hurtbox.gd" id="4"]
+[ext_resource type="Script" path="res://scripts/core/Hitbox.gd" id="5"]
+[ext_resource type="Script" path="res://scripts/core/StateMachine.gd" id="6"]
+[ext_resource type="Script" path="res://scripts/states/enemy/EnemyIdleState.gd" id="7"]
+[ext_resource type="Script" path="res://scripts/states/enemy/EnemyPatrolState.gd" id="8"]
+[ext_resource type="Script" path="res://scripts/states/enemy/EnemyChaseState.gd" id="9"]
+[ext_resource type="Script" path="res://scripts/states/enemy/EnemySearchState.gd" id="10"]
+[ext_resource type="Script" path="res://scripts/states/enemy/EnemyAttackState.gd" id="11"]
+[ext_resource type="Script" path="res://scripts/states/enemy/EnemyDeadState.gd" id="12"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_body"]
+radius = 0.4
+height = 1.9
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_hurt"]
+radius = 0.42
+height = 1.95
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_hit"]
+size = Vector3(0.6, 0.7, 0.9)
+
+[node name="EnemyBase" type="CharacterBody3D" groups=["enemy"]]
+collision_layer = 4
+collision_mask = 1
+script = ExtResource("1")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.95, 0)
+shape = SubResource("CapsuleShape3D_body")
+
+[node name="EnemyBodyVisual" parent="." instance=ExtResource("2")]
+
+[node name="Eyes" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 0)
+
+[node name="NavigationAgent3D" type="NavigationAgent3D" parent="."]
+radius = 0.4
+path_desired_distance = 0.5
+target_desired_distance = 0.6
+avoidance_enabled = true
+
+[node name="Health" type="Node" parent="."]
+script = ExtResource("3")
+
+[node name="Hurtbox" type="Area3D" parent="."]
+script = ExtResource("4")
+health_path = NodePath("../Health")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Hurtbox"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.95, 0)
+shape = SubResource("CapsuleShape3D_hurt")
+
+[node name="Hitbox" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, -0.7)
+script = ExtResource("5")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Hitbox"]
+shape = SubResource("BoxShape3D_hit")
+
+[node name="StateMachine" type="Node" parent="."]
+initial_state = "Idle"
+actor_path = NodePath("..")
+script = ExtResource("6")
+
+[node name="Idle" type="Node" parent="StateMachine"]
+script = ExtResource("7")
+
+[node name="Patrol" type="Node" parent="StateMachine"]
+script = ExtResource("8")
+
+[node name="Chase" type="Node" parent="StateMachine"]
+script = ExtResource("9")
+
+[node name="Search" type="Node" parent="StateMachine"]
+script = ExtResource("10")
+
+[node name="Attack" type="Node" parent="StateMachine"]
+script = ExtResource("11")
+
+[node name="Dead" type="Node" parent="StateMachine"]
+script = ExtResource("12")
