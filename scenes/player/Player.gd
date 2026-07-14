@@ -20,8 +20,11 @@ class_name Player
 @onready var flashlight: SpotLight3D = $CameraRig/SpringArm3D/Camera3D/Flashlight
 @onready var touch_controls: TouchControls = $TouchControls
 @onready var muzzle_hitbox: Hitbox = $CameraRig/SpringArm3D/Camera3D/MeleeHitbox
+@onready var muzzle_flash: OmniLight3D = $CameraRig/SpringArm3D/Camera3D/MuzzleFlash
 
 signal interact_prompt_changed(text: String)
+signal shot_fired
+signal shot_hit_confirmed
 
 var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity", 13.0)
 var jump_velocity: float
@@ -60,6 +63,8 @@ func _unhandled_input(event: InputEvent) -> void:
 		_try_interact()
 	if event.is_action_pressed("reload"):
 		inventory.reload_equipped()
+	if event.is_action_pressed("switch_weapon"):
+		inventory.cycle_weapon()
 	if event.is_action_pressed("flashlight") and SettingsManager.flashlight_hold_mode:
 		_set_flashlight(true)
 	if event.is_action_released("flashlight"):
@@ -166,22 +171,50 @@ func _try_fire() -> void:
 	if not inventory.try_consume_round():
 		return
 	_hitscan(weapon)
+	_flash_muzzle()
+	camera_rig.add_recoil(weapon.recoil_kick_deg)
+	shot_fired.emit()
 
+func _flash_muzzle() -> void:
+	muzzle_flash.visible = true
+	muzzle_flash.light_energy = 6.0
+	var tween := create_tween()
+	tween.tween_property(muzzle_flash, "light_energy", 0.0, 0.06)
+	tween.tween_callback(func(): muzzle_flash.visible = false)
+
+## Fires one or more pellets (shotgun-style when pellet_count > 1) down the
+## camera's forward vector, each with a random deviation inside a spread
+## cone that tightens while aiming - this is what makes hip-fire "spray" and
+## aimed shots feel precise, instead of every weapon behaving identically.
 func _hitscan(weapon: Item) -> void:
+	var is_aiming := Input.is_action_pressed("aim")
+	var spread_deg: float = weapon.aim_spread_deg if is_aiming else weapon.hip_spread_deg
 	var space_state := get_world_3d().direct_space_state
 	var from := camera.global_position
-	var to := from + (-camera.global_transform.basis.z) * weapon.weapon_range
-	var query := PhysicsRayQueryParameters3D.create(from, to)
-	query.collision_mask = (1 << 0) | (1 << 5) # world, hurtbox (never the enemy's own solid body - it overlaps the hurtbox and would shadow it)
-	query.collide_with_areas = true
-	query.collide_with_bodies = true
-	query.exclude = [self, hurtbox]
-	var result := space_state.intersect_ray(query)
-	if result.is_empty():
-		return
-	var collider = result.get("collider")
-	if collider and collider is Hurtbox:
-		collider.receive_hit(weapon.damage, self)
+	var forward := -camera.global_transform.basis.z
+	var any_hit := false
+
+	for i in range(maxi(weapon.pellet_count, 1)):
+		var dir := forward
+		if spread_deg > 0.0:
+			dir = dir.rotated(camera.global_transform.basis.x, deg_to_rad(randf_range(-spread_deg, spread_deg)))
+			dir = dir.rotated(camera.global_transform.basis.y, deg_to_rad(randf_range(-spread_deg, spread_deg)))
+		var to := from + dir * weapon.weapon_range
+		var query := PhysicsRayQueryParameters3D.create(from, to)
+		query.collision_mask = (1 << 0) | (1 << 5) # world, hurtbox (never the enemy's own solid body - it overlaps the hurtbox and would shadow it)
+		query.collide_with_areas = true
+		query.collide_with_bodies = true
+		query.exclude = [self, hurtbox]
+		var result := space_state.intersect_ray(query)
+		if result.is_empty():
+			continue
+		var collider = result.get("collider")
+		if collider and collider is Hurtbox:
+			collider.receive_hit(weapon.damage, self)
+			any_hit = true
+
+	if any_hit:
+		shot_hit_confirmed.emit()
 
 func _set_flashlight(on: bool) -> void:
 	_flashlight_on = on

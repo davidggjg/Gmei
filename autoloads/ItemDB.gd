@@ -5,14 +5,19 @@ var items: Dictionary = {}
 
 const HANDGUN := "handgun"
 const SHOTGUN := "shotgun"
+const RIFLE := "rifle"
 const KNIFE := "knife"
 const AMMO_PISTOL := "ammo_pistol"
 const AMMO_SHOTGUN := "ammo_shotgun"
+const AMMO_RIFLE := "ammo_rifle"
 const HERB_GREEN := "herb_green"
 const FIRST_AID := "first_aid"
 const KEY_ORNATE := "key_ornate"
 const KEY_RUSTY := "key_rusty"
 const DOCUMENT := "document"
+
+## Canonical weapon power order, weakest to strongest - used for weapon-switch cycling.
+const WEAPON_ORDER := [KNIFE, HANDGUN, SHOTGUN, RIFLE]
 
 func _ready() -> void:
 	_register_weapons()
@@ -34,6 +39,9 @@ func _register_weapons() -> void:
 	handgun.magazine_size = 12
 	handgun.ammo_item_id = AMMO_PISTOL
 	handgun.weapon_range = 40.0
+	handgun.hip_spread_deg = 2.0
+	handgun.aim_spread_deg = 0.15
+	handgun.recoil_kick_deg = 0.9
 	handgun.icon_color = Color(0.55, 0.55, 0.6)
 	_add(handgun)
 
@@ -42,13 +50,33 @@ func _register_weapons() -> void:
 	shotgun.name_key = "ITEM_SHOTGUN"
 	shotgun.item_type = Item.ItemType.WEAPON
 	shotgun.stackable = false
-	shotgun.damage = 65.0
+	shotgun.damage = 11.0 # per pellet - up to 8 pellets can hit at close range (~88 total)
+	shotgun.pellet_count = 8
 	shotgun.fire_rate = 1.1
 	shotgun.magazine_size = 6
 	shotgun.ammo_item_id = AMMO_SHOTGUN
-	shotgun.weapon_range = 14.0
+	shotgun.weapon_range = 16.0
+	shotgun.hip_spread_deg = 9.0
+	shotgun.aim_spread_deg = 5.0
+	shotgun.recoil_kick_deg = 3.5
 	shotgun.icon_color = Color(0.4, 0.3, 0.2)
 	_add(shotgun)
+
+	var rifle := Item.new()
+	rifle.id = RIFLE
+	rifle.name_key = "ITEM_RIFLE"
+	rifle.item_type = Item.ItemType.WEAPON
+	rifle.stackable = false
+	rifle.damage = 30.0
+	rifle.fire_rate = 6.5
+	rifle.magazine_size = 30
+	rifle.ammo_item_id = AMMO_RIFLE
+	rifle.weapon_range = 55.0
+	rifle.hip_spread_deg = 3.5
+	rifle.aim_spread_deg = 0.4
+	rifle.recoil_kick_deg = 0.8
+	rifle.icon_color = Color(0.25, 0.32, 0.22)
+	_add(rifle)
 
 	var knife := Item.new()
 	knife.id = KNIFE
@@ -78,6 +106,14 @@ func _register_ammo() -> void:
 	ammo_shotgun.max_stack = 24
 	ammo_shotgun.icon_color = Color(0.8, 0.4, 0.1)
 	_add(ammo_shotgun)
+
+	var ammo_rifle := Item.new()
+	ammo_rifle.id = AMMO_RIFLE
+	ammo_rifle.name_key = "ITEM_AMMO_RIFLE"
+	ammo_rifle.item_type = Item.ItemType.AMMO
+	ammo_rifle.max_stack = 90
+	ammo_rifle.icon_color = Color(0.55, 0.5, 0.15)
+	_add(ammo_rifle)
 
 func _register_healing() -> void:
 	var herb := Item.new()

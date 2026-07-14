@@ -56,6 +56,13 @@ spot_angle = 32.0
 spot_angle_attenuation = 1.5
 shadow_enabled = true
 
+[node name="MuzzleFlash" type="OmniLight3D" parent="CameraRig/SpringArm3D/Camera3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.15, -0.15, -0.6)
+visible = false
+light_color = Color(1, 0.8, 0.4, 1)
+light_energy = 6.0
+omni_range = 4.0
+
 [node name="MeleeHitbox" type="Area3D" parent="CameraRig/SpringArm3D/Camera3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.2, -1.0)
 script = ExtResource("8")

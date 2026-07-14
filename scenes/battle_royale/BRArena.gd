@@ -11,6 +11,7 @@ const LOOT_SEED := 42017
 const LOOT_TABLE := [
 	{"id": "ammo_pistol", "count": 20}, {"id": "ammo_pistol", "count": 14},
 	{"id": "ammo_shotgun", "count": 8}, {"id": "shotgun", "count": 1},
+	{"id": "ammo_rifle", "count": 30}, {"id": "ammo_rifle", "count": 20}, {"id": "rifle", "count": 1},
 	{"id": "herb_green", "count": 2}, {"id": "first_aid", "count": 1},
 	{"id": "handgun", "count": 1}, {"id": "ammo_pistol", "count": 25},
 ]

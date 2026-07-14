@@ -24,6 +24,8 @@ var current_mode: String = SettingsManager.CAMERA_FIRST_PERSON
 
 var _target_spring_length: float = 0.0
 var _target_camera_offset: Vector3 = Vector3.ZERO
+var _recoil_pitch: float = 0.0
+const RECOIL_RECOVERY_SPEED := 7.0
 
 func _ready() -> void:
 	if body_visual_path != NodePath():
@@ -35,6 +37,16 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	spring_arm.spring_length = lerp(spring_arm.spring_length, _target_spring_length, 1.0 - exp(-transition_speed * delta))
 	camera.position = camera.position.lerp(_target_camera_offset, 1.0 - exp(-transition_speed * delta))
+	if _recoil_pitch > 0.0:
+		var recover: float = _recoil_pitch * (1.0 - exp(-RECOIL_RECOVERY_SPEED * delta))
+		rotation.x += recover
+		_recoil_pitch -= recover
+
+## Kicks the view upward briefly and lets it settle back down - called once per shot.
+func add_recoil(amount_deg: float) -> void:
+	var amount_rad: float = deg_to_rad(amount_deg)
+	rotation.x = clampf(rotation.x - amount_rad, deg_to_rad(pitch_min_deg), deg_to_rad(pitch_max_deg))
+	_recoil_pitch += amount_rad
 
 func _on_settings_changed() -> void:
 	set_mode(SettingsManager.camera_mode)

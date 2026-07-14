@@ -138,24 +138,24 @@ func try_fire_at(target: Node3D) -> bool:
 	var space_state := get_world_3d().direct_space_state
 	var aim_point: Vector3 = target.global_position + Vector3.UP * 0.9
 	var error_deg: float = difficulty.enemy_aim_error_deg
-	var jitter := Vector3(
-		randf_range(-error_deg, error_deg),
-		randf_range(-error_deg, error_deg),
-		0.0
-	)
 	var from := eyes.global_position
-	var dir := (aim_point - from).normalized().rotated(Vector3.UP, deg_to_rad(jitter.x))
-	var to := from + dir * weapon.weapon_range
-	var query := PhysicsRayQueryParameters3D.create(from, to)
-	query.collision_mask = (1 << 0) | (1 << 5) # world, hurtbox
-	query.collide_with_areas = true
-	query.exclude = [self, hurtbox]
-	var result := space_state.intersect_ray(query)
-	if result.is_empty():
-		return true
-	var collider = result.get("collider")
-	if collider is Hurtbox:
-		collider.receive_hit(weapon.damage, self)
+	var base_dir := (aim_point - from).normalized()
+
+	for i in range(maxi(weapon.pellet_count, 1)):
+		var spread: float = error_deg + weapon.hip_spread_deg
+		var dir := base_dir.rotated(Vector3.UP, deg_to_rad(randf_range(-spread, spread)))
+		dir = dir.rotated(dir.cross(Vector3.UP).normalized(), deg_to_rad(randf_range(-spread, spread)))
+		var to := from + dir * weapon.weapon_range
+		var query := PhysicsRayQueryParameters3D.create(from, to)
+		query.collision_mask = (1 << 0) | (1 << 5) # world, hurtbox
+		query.collide_with_areas = true
+		query.exclude = [self, hurtbox]
+		var result := space_state.intersect_ray(query)
+		if result.is_empty():
+			continue
+		var collider = result.get("collider")
+		if collider is Hurtbox:
+			collider.receive_hit(weapon.damage, self)
 	return true
 
 func _on_died(_source: Node) -> void:

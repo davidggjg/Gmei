@@ -120,6 +120,19 @@ text = "ריצה"
 action_name = "sprint"
 script = ExtResource("4")
 
+[node name="SwitchWeapon" type="Button" parent="."]
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -230.0
+offset_top = -440.0
+offset_right = -150.0
+offset_bottom = -370.0
+text = "החלף"
+action_name = "switch_weapon"
+script = ExtResource("4")
+
 [node name="Flashlight" type="Button" parent="."]
 anchor_left = 1.0
 anchor_top = 1.0

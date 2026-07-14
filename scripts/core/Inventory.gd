@@ -62,6 +62,21 @@ func get_equipped_weapon() -> Item:
 		return null
 	return ItemDB.get_item(equipped_weapon_id)
 
+## Cycles to the next owned weapon (wraps around), skipping the one already
+## equipped. Order is ItemDB.WEAPON_ORDER (weakest to strongest).
+func cycle_weapon(direction: int = 1) -> void:
+	var owned: Array = []
+	for id in ItemDB.WEAPON_ORDER:
+		if stacks.has(id):
+			owned.append(id)
+	if owned.size() <= 1:
+		return
+	var idx := owned.find(equipped_weapon_id)
+	if idx == -1:
+		idx = 0
+	var next_idx := posmod(idx + direction, owned.size())
+	equip_weapon(owned[next_idx])
+
 func current_magazine() -> int:
 	return _magazine_ammo.get(equipped_weapon_id, 0)
 

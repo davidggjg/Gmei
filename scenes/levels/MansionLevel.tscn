@@ -94,6 +94,16 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 15)
 item_id = "key_ornate"
 count = 1
 
+[node name="ArmoryRiflePickup" parent="." instance=ExtResource("4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17, 0, 0)
+item_id = "rifle"
+count = 1
+
+[node name="ArmoryRifleAmmoPickup" parent="." instance=ExtResource("4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17, 0, 1.2)
+item_id = "ammo_rifle"
+count = 40
+
 [node name="StudyHerbPickup" parent="." instance=ExtResource("4")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0, -15)
 item_id = "herb_green"

@@ -19,6 +19,10 @@ enum ItemType { WEAPON, AMMO, HEALING, KEY, DOCUMENT }
 @export var ammo_item_id: String = "" ## id of the Item this weapon consumes
 @export var weapon_range: float = 30.0
 @export var is_melee: bool = false
+@export var pellet_count: int = 1 ## >1 for shotgun-style multi-pellet spread
+@export var hip_spread_deg: float = 2.5 ## accuracy cone when not aiming
+@export var aim_spread_deg: float = 0.2 ## accuracy cone when holding aim
+@export var recoil_kick_deg: float = 1.2 ## camera kick per shot
 
 ## Healing-only field
 @export var heal_amount: float = 0.0
