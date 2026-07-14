@@ -44,7 +44,8 @@ func _ready() -> void:
 	_play_body_anim("idle")
 	interaction_area.area_entered.connect(_on_interactable_area_entered)
 	interaction_area.area_exited.connect(_on_interactable_area_exited)
-	touch_controls.look_pad.look_delta.connect(_on_touch_look_delta)
+	if touch_controls.look_pad:
+		touch_controls.look_pad.look_delta.connect(_on_touch_look_delta)
 	if not OS.has_feature("mobile"):
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	GameManager.pause_state_changed.connect(_on_pause_state_changed)
