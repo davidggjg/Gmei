@@ -12,7 +12,9 @@ class_name HUD
 @onready var death_title: Label = $Root/DeathScreen/Panel/VBox/Title
 @onready var inventory_ui: InventoryUI = $Root/InventoryUIInstance
 @onready var hit_marker: Label = $Root/HitMarker
-@onready var radar: RadarHUD = $Root/Radar
+## Control, not RadarHUD - see the comment on TouchControls.move_joystick;
+## same class_name-registration issue observed here in the same CI build.
+@onready var radar: Control = $Root/Radar
 
 var player: Player
 var _hit_marker_tween: Tween
@@ -47,7 +49,8 @@ func bind_player(p: Player) -> void:
 	_refresh_ammo()
 	inventory_ui.bind_player(player)
 	var group := "br_bot" if GameManager.current_mode == GameManager.Mode.BATTLE_ROYALE else "enemy"
-	radar.bind_player(player, group)
+	if radar:
+		radar.bind_player(player, group)
 
 func _on_health_changed(current: float, max_health: float) -> void:
 	health_bar.max_value = max_health
