@@ -1,5 +1,5 @@
 extends Control
-class_name VirtualJoystick
+class_name TouchJoystick
 ## Self-contained on-screen joystick, drawn procedurally (no texture assets
 ## needed). Tracks its own touch index so multiple touch controls can be
 ## active on screen simultaneously.

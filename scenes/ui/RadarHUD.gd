@@ -31,14 +31,14 @@ func _draw() -> void:
 		return
 
 	var yaw := player.rotation.y
-	for node in get_tree().get_nodes_in_group(enemy_group):
+	for node: Node3D in get_tree().get_nodes_in_group(enemy_group):
 		if not is_instance_valid(node) or node == player:
 			continue
 		if "health" in node and node.health.is_dead:
 			continue
-		var to := (node.global_position - player.global_position)
+		var to: Vector3 = (node.global_position - player.global_position)
 		to.y = 0.0
-		var dist := to.length()
+		var dist: float = to.length()
 		if dist > radar_range:
 			continue
 		var flat := Vector2(to.x, to.z).rotated(yaw) # counter-rotate into player-facing space
