@@ -21,11 +21,14 @@ class_name EnemyBase
 @onready var hitbox: Hitbox = $Hitbox
 @onready var state_machine: StateMachine = $StateMachine
 @onready var eyes: Node3D = $Eyes
+@onready var body_visual: Node3D = $EnemyBodyVisual
 
 var difficulty: DifficultyProfile
 var player: Node3D
 var last_known_player_position: Vector3 = Vector3.ZERO
 var patrol_points: Array[Vector3] = []
+var _body_anim: AnimationPlayer
+var _current_anim: String = ""
 
 var move_speed: float = 1.6
 var chase_speed: float = 3.4
@@ -51,6 +54,16 @@ func _ready() -> void:
 	player = get_tree().get_first_node_in_group("player")
 	health.died.connect(_on_died)
 	_collect_patrol_points()
+	_body_anim = body_visual.find_child("AnimationPlayer", true, false)
+	play_anim("idle")
+
+func play_anim(anim_name: String) -> void:
+	if _body_anim == null or _current_anim == anim_name:
+		return
+	if not _body_anim.has_animation(anim_name):
+		return
+	_current_anim = anim_name
+	_body_anim.play(anim_name)
 
 func _collect_patrol_points() -> void:
 	if patrol_route_path == NodePath():
@@ -117,9 +130,11 @@ func distance_to_player() -> float:
 	return global_position.distance_to(player.global_position)
 
 func perform_attack() -> void:
+	play_anim("attack-melee-right")
 	hitbox.activate()
 	get_tree().create_timer(0.25).timeout.connect(hitbox.deactivate)
 
 func _on_died(_source: Node) -> void:
+	play_anim("die")
 	state_machine.transition_to("Dead")
 	died_signal.emit()

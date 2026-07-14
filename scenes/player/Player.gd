@@ -33,11 +33,15 @@ var is_dead: bool = false
 var _fire_cooldown: float = 0.0
 var _nearby_interactables: Array[Interactable] = []
 var _flashlight_on: bool = false
+var _body_anim: AnimationPlayer
+var _current_anim: String = ""
 
 func _ready() -> void:
 	jump_velocity = sqrt(2.0 * gravity * jump_height)
 	add_to_group("player")
 	health.died.connect(_on_died)
+	_body_anim = body_visual.find_child("AnimationPlayer", true, false)
+	_play_body_anim("idle")
 	interaction_area.area_entered.connect(_on_interactable_area_entered)
 	interaction_area.area_exited.connect(_on_interactable_area_exited)
 	touch_controls.look_pad.look_delta.connect(_on_touch_look_delta)
@@ -114,6 +118,22 @@ func _physics_process(delta: float) -> void:
 	camera_rig.position.y = lerp(camera_rig.position.y, camera_rig.first_person_eye_height + (crouch_camera_offset if is_crouching else 0.0), 1.0 - exp(-10.0 * delta))
 
 	move_and_slide()
+
+	var ground_speed := Vector2(velocity.x, velocity.z).length()
+	if ground_speed < 0.2:
+		_play_body_anim("idle")
+	elif sprinting:
+		_play_body_anim("sprint")
+	else:
+		_play_body_anim("walk")
+
+func _play_body_anim(anim_name: String) -> void:
+	if _body_anim == null or _current_anim == anim_name:
+		return
+	if not _body_anim.has_animation(anim_name):
+		return
+	_current_anim = anim_name
+	_body_anim.play(anim_name)
 
 func _get_move_input() -> Vector2:
 	var vec := Input.get_vector("move_left", "move_right", "move_forward", "move_backward")
@@ -223,6 +243,7 @@ func _set_flashlight(on: bool) -> void:
 func _on_died(_source: Node) -> void:
 	is_dead = true
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	_play_body_anim("die")
 	GameManager.on_player_died()
 
 func build_save_data() -> Dictionary:

@@ -20,11 +20,13 @@ func physics_update(delta: float) -> void:
 		return
 
 	if not _arrived:
+		enemy.play_anim("walk")
 		enemy.move_toward_point(enemy.last_known_player_position, enemy.move_speed, delta)
 		if enemy.global_position.distance_to(enemy.last_known_player_position) <= arrival_distance:
 			_arrived = true
 		return
 
+	enemy.play_anim("idle")
 	enemy.velocity.x = 0.0
 	enemy.velocity.z = 0.0
 	enemy.rotate_y(look_around_speed * delta)

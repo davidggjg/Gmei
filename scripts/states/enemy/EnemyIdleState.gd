@@ -11,6 +11,7 @@ func enter(_msg: Dictionary = {}) -> void:
 	_timer = 0.0
 	enemy.velocity.x = 0.0
 	enemy.velocity.z = 0.0
+	enemy.play_anim("idle")
 
 func physics_update(delta: float) -> void:
 	if enemy.can_see_player():

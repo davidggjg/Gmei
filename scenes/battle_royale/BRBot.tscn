@@ -1,7 +1,7 @@
 [gd_scene load_steps=13 format=3]
 
 [ext_resource type="Script" path="res://scenes/battle_royale/BRBot.gd" id="1"]
-[ext_resource type="PackedScene" path="res://scenes/enemies/EnemyBodyVisual.tscn" id="2"]
+[ext_resource type="PackedScene" path="res://scenes/battle_royale/BotBodyVisual.tscn" id="2"]
 [ext_resource type="Script" path="res://scripts/core/Health.gd" id="3"]
 [ext_resource type="Script" path="res://scripts/core/Hurtbox.gd" id="4"]
 [ext_resource type="Script" path="res://scripts/core/Inventory.gd" id="5"]

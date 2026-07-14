@@ -24,6 +24,8 @@ var move_speed: float = 3.3
 var detection_radius: float = 26.0
 var safe_zone: SafeZone
 var current_target: Node3D = null
+var _body_anim: AnimationPlayer
+var _current_anim: String = ""
 
 signal died_signal
 signal killed_target(target: Node3D)
@@ -36,6 +38,16 @@ func _ready() -> void:
 	detection_radius = base_detection_radius * difficulty.enemy_detection_radius_mult
 	health.died.connect(_on_died)
 	_grant_starting_loadout()
+	_body_anim = body_visual.find_child("AnimationPlayer", true, false)
+	play_anim("idle")
+
+func play_anim(anim_name: String) -> void:
+	if _body_anim == null or _current_anim == anim_name:
+		return
+	if not _body_anim.has_animation(anim_name):
+		return
+	_current_anim = anim_name
+	_body_anim.play(anim_name)
 
 func _grant_starting_loadout() -> void:
 	# Every bot drops in minimally armed (fair fight); a Shotgun is a scavenged upgrade.
@@ -65,6 +77,14 @@ func move_toward_point(target: Vector3, speed: float, delta: float) -> void:
 	else:
 		velocity.y = 0.0
 	move_and_slide()
+
+	var ground_speed := Vector2(velocity.x, velocity.z).length()
+	if ground_speed < 0.3:
+		play_anim("idle")
+	elif ground_speed >= move_speed * 0.9:
+		play_anim("sprint")
+	else:
+		play_anim("walk")
 
 func face_toward(target: Vector3, delta: float, turn_speed: float = 6.0) -> void:
 	var dir := target - global_position
@@ -159,5 +179,6 @@ func try_fire_at(target: Node3D) -> bool:
 	return true
 
 func _on_died(_source: Node) -> void:
+	play_anim("die")
 	state_machine.transition_to("Dead")
 	died_signal.emit()

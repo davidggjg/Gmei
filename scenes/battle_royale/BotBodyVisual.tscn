@@ -1,8 +1,8 @@
 [gd_scene load_steps=2 format=3]
 
-[ext_resource type="PackedScene" path="res://assets/characters/character-a.glb" id="1"]
+[ext_resource type="PackedScene" path="res://assets/characters/character-c.glb" id="1"]
 
-[node name="PlayerBodyVisual" type="Node3D"]
+[node name="BotBodyVisual" type="Node3D"]
 
 [node name="CharacterModel" parent="." instance=ExtResource("1")]
 transform = Transform3D(0.667, 0, 0, 0, 0.667, 0, 0, 0, 0.667, 0, 0, 0)

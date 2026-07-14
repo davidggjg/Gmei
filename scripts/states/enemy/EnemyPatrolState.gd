@@ -28,12 +28,14 @@ func physics_update(delta: float) -> void:
 	if _waiting:
 		enemy.velocity.x = 0.0
 		enemy.velocity.z = 0.0
+		enemy.play_anim("idle")
 		_wait_timer -= delta
 		if _wait_timer <= 0.0:
 			_waiting = false
 			_index = (_index + 1) % enemy.patrol_points.size()
 		return
 
+	enemy.play_anim("walk")
 	enemy.move_toward_point(target, enemy.move_speed, delta)
 	if enemy.global_position.distance_to(target) <= arrival_distance:
 		_waiting = true

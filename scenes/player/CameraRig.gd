@@ -73,8 +73,11 @@ func toggle_mode() -> void:
 func _set_head_visible(visible_head: bool) -> void:
 	if body_visual == null:
 		return
-	var head := body_visual.get_node_or_null("Head")
-	if head:
+	# Recursive + case-insensitive: works whether body_visual is the simple
+	# placeholder mesh (a direct "Head" child) or an imported character
+	# model where "head" is nested a few levels down inside the glTF scene.
+	var head := body_visual.find_child("*head*", true, false)
+	if head and head is Node3D:
 		head.visible = visible_head
 
 ## Called by the player controller for both mouse motion and touch-drag look.

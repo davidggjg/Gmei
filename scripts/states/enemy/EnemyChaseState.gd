@@ -29,4 +29,5 @@ func physics_update(delta: float) -> void:
 			state_machine.transition_to("Search")
 			return
 
+	enemy.play_anim("sprint")
 	enemy.move_toward_point(enemy.last_known_player_position, enemy.chase_speed, delta)
